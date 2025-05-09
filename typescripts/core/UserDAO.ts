@@ -3,7 +3,7 @@ import { RunProps } from './DB.js';
 
 const KEY = 'highlow-user';
 
-const TEMPLATE: MatchKeysAndValues<User> = {
+const TEMPLATE: Partial<User> = {
   userId: '550e8400-e29b-41d4-a716-446655440000',
   balance: 1_000_000,
   deleted: false,
