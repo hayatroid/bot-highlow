@@ -6,6 +6,7 @@
   "description": "A traQ bot that provides a virtual stock exchange for highlow.",
   "dependencies": {
     "hubot": "^12.0.1",
-    "hubot-traq": "^2.0.0"
+    "hubot-traq": "^2.0.0",
+    "mongodb": "^6.16.0"
   }
 }
