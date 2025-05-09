@@ -47,7 +47,7 @@ export default async (robot: Robot) => {
     const userId = res.message.user.id;
     if (!isAdmin(userId)) {
       res.send('権限がありません。');
-    } else if (await db.run(userDAO.forceDelete(userId))) {
+    } else if (await db.run(userDAO.deleteCompletely(userId))) {
       res.send('削除しました。');
     } else {
       res.send('データがありません。');
