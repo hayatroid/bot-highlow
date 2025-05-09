@@ -8,5 +8,10 @@
     "hubot": "^12.0.1",
     "hubot-traq": "^2.0.0",
     "mongodb": "^6.16.0"
+  },
+  "devDependencies": {
+    "@types/hubot": "^11.3.0",
+    "@types/node": "^22.15.17",
+    "typescript": "^5.8.3"
   }
 }
