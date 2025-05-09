@@ -27,13 +27,13 @@ export class UserDAO {
   delete(userId: string) {
     return this.build((c) => c.findOneAndUpdate({ userId, deleted: false }, { $set: { deleted: true } }));
   }
+  checkedAdd(userId: string, rhs: number) {
+    return this.build((c) => c.findOneAndUpdate({ userId, deleted: false, balance: { $gte: -rhs } }, { $inc: { balance: rhs } }));
+  }
   forceDelete(userId: string) {
     return this.build((c) => c.findOneAndDelete({ userId }));
   }
   restore(userId: string) {
     return this.build((c) => c.findOneAndUpdate({ userId, deleted: true }, { $set: { deleted: false } }));
-  }
-  checkedAdd(userId: string, rhs: number) {
-    return this.build((c) => c.findOneAndUpdate({ userId, balance: { $gte: -rhs } }, { $inc: { balance: rhs } }));
   }
 }
