@@ -9,9 +9,9 @@ const userDAO = new UserDAO();
 export default async (robot: Robot) => {
   robot.hear(/\/join$/, async (res: Response) => {
     const userId = res.message.user.id;
-    if (!(await db.run(userDAO.create(userId)))) {
+    if (!(await db.run(userDAO.findOneOrInsert(userId)))) {
       res.send('参加しました！');
-    } else if (await db.run(userDAO.restore(userId))) {
+    } else if (await db.run(userDAO.findOneAndRestore(userId))) {
       res.send('お久しぶりです！');
     } else {
       res.send('参加済みです。');
@@ -19,7 +19,7 @@ export default async (robot: Robot) => {
   });
   robot.hear(/\/show$/, async (res: Response) => {
     const userId = res.message.user.id;
-    const user = await db.run(userDAO.get(userId));
+    const user = await db.run(userDAO.findOne(userId));
     if (user) {
       res.send(`${user.balance} 円です。`);
     } else {
@@ -28,7 +28,7 @@ export default async (robot: Robot) => {
   });
   robot.hear(/\/work$/, async (res: Response) => {
     const userId = res.message.user.id;
-    const updated = await db.run(userDAO.checkedAdd(userId, -400_000));
+    const updated = await db.run(userDAO.findOneAndAdd(userId, -400_000));
     if (updated) {
       res.send(`${updated.balance - 400_000} 円になりました。`);
     } else {
@@ -37,7 +37,7 @@ export default async (robot: Robot) => {
   });
   robot.hear(/\/leave$/, async (res: Response) => {
     const userId = res.message.user.id;
-    if (await db.run(userDAO.delete(userId))) {
+    if (await db.run(userDAO.findOneAndDelete(userId))) {
       res.send('退会しました。');
     } else {
       res.send('参加してください。');
@@ -47,7 +47,7 @@ export default async (robot: Robot) => {
     const userId = res.message.user.id;
     if (!isAdmin(userId)) {
       res.send('権限がありません。');
-    } else if (await db.run(userDAO.deleteCompletely(userId))) {
+    } else if (await db.run(userDAO.findOneAndForceDelete(userId))) {
       res.send('削除しました。');
     } else {
       res.send('データがありません。');

@@ -1,4 +1,4 @@
-import { Collection, MatchKeysAndValues } from 'mongodb';
+import { Collection } from 'mongodb';
 import { RunProps } from './DB.js';
 
 const KEY = 'highlow-user';
@@ -19,22 +19,22 @@ export class UserDAO {
   private build(handle: (c: Collection<User>) => Promise<User | null>): RunProps<User> {
     return { key: KEY, handle };
   }
-  create(userId: string) {
+  findOneOrInsert(userId: string) {
     return this.build((c) => c.findOneAndUpdate({ userId }, { $setOnInsert: { ...TEMPLATE, userId } }, { upsert: true }));
   }
-  get(userId: string) {
+  findOne(userId: string) {
     return this.build((c) => c.findOne({ userId, deleted: false }));
   }
-  delete(userId: string) {
+  findOneAndDelete(userId: string) {
     return this.build((c) => c.findOneAndUpdate({ userId, deleted: false }, { $set: { deleted: true } }));
   }
-  checkedAdd(userId: string, rhs: number) {
+  findOneAndAdd(userId: string, rhs: number) {
     return this.build((c) => c.findOneAndUpdate({ userId, deleted: false, balance: { $gte: -rhs } }, { $inc: { balance: rhs } }));
   }
-  restore(userId: string) {
+  findOneAndRestore(userId: string) {
     return this.build((c) => c.findOneAndUpdate({ userId, deleted: true }, { $set: { deleted: false } }));
   }
-  deleteCompletely(userId: string) {
+  findOneAndForceDelete(userId: string) {
     return this.build((c) => c.findOneAndDelete({ userId, deleted: true }));
   }
 }
