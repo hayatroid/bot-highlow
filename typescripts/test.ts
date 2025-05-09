@@ -9,7 +9,7 @@ const userDAO = new UserDAO();
 export default async (robot: Robot) => {
   robot.hear(/\/join$/, async (res: Response) => {
     const userId = res.message.user.id;
-    if (await db.run(userDAO.create(userId))) {
+    if (!(await db.run(userDAO.create(userId)))) {
       res.send('参加しました！');
     } else if (await db.run(userDAO.restore(userId))) {
       res.send('お久しぶりです！');
@@ -30,7 +30,7 @@ export default async (robot: Robot) => {
     const userId = res.message.user.id;
     const updated = await db.run(userDAO.checkedAdd(userId, -400_000));
     if (updated) {
-      res.send(`${updated.balance} 円になりました。`);
+      res.send(`${updated.balance - 400_000} 円になりました。`);
     } else {
       res.send('所持金が足りません。');
     }

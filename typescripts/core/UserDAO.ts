@@ -19,21 +19,21 @@ export class UserDAO {
     return { key: KEY, handle };
   }
   create(userId: string) {
-    return this.build((c) => c.findOneAndUpdate({ userId }, { $setOnInsert: { ...TEMPLATE, userId } }, { upsert: true, returnDocument: 'after' }));
+    return this.build((c) => c.findOneAndUpdate({ userId }, { $setOnInsert: { ...TEMPLATE, userId } }, { upsert: true }));
   }
   get(userId: string) {
     return this.build((c) => c.findOne({ userId, deleted: false }));
   }
   delete(userId: string) {
-    return this.build((c) => c.findOneAndUpdate({ userId, deleted: false }, { $set: { deleted: true } }, { returnDocument: 'after' }));
+    return this.build((c) => c.findOneAndUpdate({ userId, deleted: false }, { $set: { deleted: true } }));
   }
   forceDelete(userId: string) {
     return this.build((c) => c.findOneAndDelete({ userId }));
   }
   restore(userId: string) {
-    return this.build((c) => c.findOneAndUpdate({ userId, deleted: true }, { $set: { deleted: false } }, { returnDocument: 'after' }));
+    return this.build((c) => c.findOneAndUpdate({ userId, deleted: true }, { $set: { deleted: false } }));
   }
   checkedAdd(userId: string, rhs: number) {
-    return this.build((c) => c.findOneAndUpdate({ userId, balance: { $gte: -rhs } }, { $inc: { balance: rhs } }, { returnDocument: 'after' }));
+    return this.build((c) => c.findOneAndUpdate({ userId, balance: { $gte: -rhs } }, { $inc: { balance: rhs } }));
   }
 }
